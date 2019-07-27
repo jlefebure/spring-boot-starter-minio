@@ -13,7 +13,7 @@ version start at 2.1.6.RELEASE.
 Maven
 ```xml
 <dependency>
-    <groupId>com.github.jlefebure</groupId>
+    <groupId>io.github.jlefebure</groupId>
     <artifactId>spring-boot-starter-minio</artifactId>
     <version>2.1.6.RELEASE</version>
 </dependency>

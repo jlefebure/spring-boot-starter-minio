@@ -1,5 +1,15 @@
 language: java
-
 jdk:
-  - oraclejdk11
-  - oraclejdk12
+- oraclejdk11
+- oraclejdk12
+
+
+deploy:
+  provider: releases
+  file_glob: true
+  api_key:
+    secure: BR6zp5EF450jvl8B9AZKPCdrd3PLQ7IMtKi6Gk8hF/dmaya1k63lLngowluCDrCTc3ftwVXoj4c3cHYTTK9RLZmDqjIUUZS/cdrCg7W9digljPEe6V1dS6A0RpQlLO3aPKGVmMh9nl7vhgpdCSLo66YWyW8k67v5Ko6qCzIzSHd9t4a1Y3TMGLxMKR+Jy+aAnSP3NbrK0lyeo4ykGme1deLAhuTgmeWA4nYXAN/vDsRJDQluzCASjp3v8TTXtEPyDQZGgex5ZP8e1WvdkjYprkKUhjVFP9+ztv3dcdQ7oEctgt1xYmCny4aMNtlJfXIddv1fNz41IngaI/h9hQOOFYCW4ZXHum79mhDZy9DY5KwM9sEMnN51k6ApfgWYK9Vamiid0GAP9LxJvwrAWWM3YpktnTdfRPF6c/bDqtED9w55M6uqTjs7wm8oLEU8YWzwTx2TyR8C/keVB58wjQEe4ey2ar/aI3Td7AOOpHm0tULzekIm47uxootK7jXF+I3uDInCGBwQwQEtKEnWR6p+uKKBCIlU4vFRBZgguq60CI4KidFxDjSFUMC85STqeY65Kbww3fsxZ0whgtbLU8T86A1hoosoSgibCD6kdixliemnze4mh3E314lOGn4PwdccdiIumi/S736+dQgsGWMaapgHXkROR7Hz5tVBqUg+VXI=
+  file: target/*.jar
+  on:
+    tags: true
+    repo: jlefebure/spring-boot-starter-minio

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.jlefebure</groupId>
+    <groupId>io.github.jlefebure</groupId>
     <artifactId>spring-boot-starter-minio</artifactId>
 
     <properties>
@@ -12,6 +12,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <minio.version>6.0.8</minio.version>
     </properties>
+
+    <version>${parent.version}</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

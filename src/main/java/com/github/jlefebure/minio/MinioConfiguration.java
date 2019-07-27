@@ -1,4 +1,4 @@
-package io.github.jlefebure.minio;
+package com.github.jlefebure.minio;
 
 import io.minio.MinioClient;
 import io.minio.errors.*;
@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 @Configuration
 @ConditionalOnClass(MinioClient.class)
 @EnableConfigurationProperties(MinioConfigurationProperties.class)
-@ComponentScan("io.github.jlefebure.minio")
+@ComponentScan("com.github.jlefebure.minio")
 public class MinioConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MinioConfiguration.class);

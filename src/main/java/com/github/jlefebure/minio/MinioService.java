@@ -1,4 +1,4 @@
-package io.github.jlefebure.minio;
+package com.github.jlefebure.minio;
 
 
 import io.minio.MinioClient;
@@ -22,7 +22,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * Service class to interact with Minio bucket. This class is register as a bean and use the properties defined in {@link MinioConfigurationProperties}.
- * All methods return an {@link io.github.jlefebure.minio.MinioException} which wrap the Minio SDK exception.
+ * All methods return an {@link com.github.jlefebure.minio.MinioException} which wrap the Minio SDK exception.
  * The bucket name is provided with the one defined in the configuration properties.
  */
 @Service
@@ -38,14 +38,14 @@ public class MinioService {
      * List all objects at root of the bucket
      *
      * @return List of items
-     * @throws io.github.jlefebure.minio.MinioException if an error occur while fetch list
+     * @throws com.github.jlefebure.minio.MinioException if an error occur while fetch list
      */
-    public List<Item> list() throws io.github.jlefebure.minio.MinioException {
+    public List<Item> list() throws com.github.jlefebure.minio.MinioException {
         try {
             Iterable<Result<Item>> myObjects = minioClient.listObjects(configurationProperties.getBucket());
             return getItems(myObjects);
         } catch (XmlPullParserException e) {
-            throw new io.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
+            throw new com.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
 
@@ -53,14 +53,14 @@ public class MinioService {
      * List all objects with the prefix given in parameter for the bucket
      *
      * @return List of items
-     * @throws io.github.jlefebure.minio.MinioException if an error occur while fetch list
+     * @throws com.github.jlefebure.minio.MinioException if an error occur while fetch list
      */
-    public List<Item> list(Path path) throws io.github.jlefebure.minio.MinioException {
+    public List<Item> list(Path path) throws com.github.jlefebure.minio.MinioException {
         try {
             Iterable<Result<Item>> myObjects = minioClient.listObjects(configurationProperties.getBucket(), path.toString());
             return getItems(myObjects);
         } catch (XmlPullParserException e) {
-            throw new io.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
+            throw new com.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
 
@@ -96,13 +96,13 @@ public class MinioService {
      *
      * @param path Path with prefix to the object. Object name must be included.
      * @return The object as an InputStream
-     * @throws io.github.jlefebure.minio.MinioException if an error occur while fetch object
+     * @throws com.github.jlefebure.minio.MinioException if an error occur while fetch object
      */
-    public InputStream get(Path path) throws io.github.jlefebure.minio.MinioException {
+    public InputStream get(Path path) throws com.github.jlefebure.minio.MinioException {
         try {
             return minioClient.getObject(configurationProperties.getBucket(), path.toString());
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
-            throw new io.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
+            throw new com.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
 
@@ -111,13 +111,13 @@ public class MinioService {
      *
      * @param source Path with prefix to the object. Object name must be included.
      * @param fileName Filename
-     * @throws io.github.jlefebure.minio.MinioException if an error occur while fetch object
+     * @throws com.github.jlefebure.minio.MinioException if an error occur while fetch object
      */
-    public void getAndSave(Path source, String fileName) throws io.github.jlefebure.minio.MinioException {
+    public void getAndSave(Path source, String fileName) throws com.github.jlefebure.minio.MinioException {
         try {
             minioClient.getObject(configurationProperties.getBucket(), source.toString(), fileName);
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
-            throw new io.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
+            throw new com.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
 
@@ -126,13 +126,13 @@ public class MinioService {
      * @param source Path with prefix to the object. Object name must be included.
      * @param file File as an inputstream
      * @param contentType MIME type for the object
-     * @throws io.github.jlefebure.minio.MinioException if an error occur while uploading object
+     * @throws com.github.jlefebure.minio.MinioException if an error occur while uploading object
      */
-    public void upload(Path source, InputStream file, ContentType contentType) throws io.github.jlefebure.minio.MinioException {
+    public void upload(Path source, InputStream file, ContentType contentType) throws com.github.jlefebure.minio.MinioException {
         try {
             minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, contentType.getMimeType());
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
-            throw new io.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
+            throw new com.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
 
@@ -141,13 +141,13 @@ public class MinioService {
      * @param source Path with prefix to the object. Object name must be included.
      * @param file File as an inputstream
      * @param contentType MIME type for the object
-     * @throws io.github.jlefebure.minio.MinioException if an error occur while uploading object
+     * @throws com.github.jlefebure.minio.MinioException if an error occur while uploading object
      */
-    public void upload(Path source, InputStream file, String contentType) throws io.github.jlefebure.minio.MinioException {
+    public void upload(Path source, InputStream file, String contentType) throws com.github.jlefebure.minio.MinioException {
         try {
             minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, contentType);
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
-            throw new io.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
+            throw new com.github.jlefebure.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
 
@@ -155,9 +155,9 @@ public class MinioService {
      * Remove a file to Minio
      *
      * @param source Path with prefix to the object. Object name must be included.
-     * @throws io.github.jlefebure.minio.MinioException if an error occur while uploading object
+     * @throws com.github.jlefebure.minio.MinioException if an error occur while uploading object
      */
-    public void remove(Path source) throws io.github.jlefebure.minio.MinioException {
+    public void remove(Path source) throws com.github.jlefebure.minio.MinioException {
         try {
             minioClient.removeObject(configurationProperties.getBucket(), source.toString());
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {

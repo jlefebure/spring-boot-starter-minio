@@ -1,4 +1,4 @@
-package io.github.jlefebure.minio;
+package com.github.jlefebure.minio;
 
 
 import io.micrometer.core.instrument.MeterRegistry;

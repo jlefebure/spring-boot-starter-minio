@@ -13,7 +13,7 @@ version start at 2.1.6.RELEASE.
 Maven
 ```xml
 <dependency>
-    <groupId>io.github.jlefebure</groupId>
+    <groupId>com.github.jlefebure</groupId>
     <artifactId>spring-boot-starter-minio</artifactId>
     <version>2.1.6.RELEASE</version>
 </dependency>
@@ -21,7 +21,7 @@ Maven
 
 Gradle 
 ```groovy
-    implementation 'io.github.jlefebure:spring-boot-starter-minio:2.1.6.RELEASE'
+    implementation 'com.github.jlefebure:spring-boot-starter-minio:2.1.6.RELEASE'
 ```
 
 

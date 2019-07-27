@@ -1,4 +1,4 @@
-package io.github.jlefebure.minio;
+package com.github.jlefebure.minio;
 
 
 import org.springframework.beans.factory.annotation.Value;

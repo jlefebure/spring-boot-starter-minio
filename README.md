@@ -1,5 +1,7 @@
 # Spring Boot Starter Minio
 
+[![Build Status](https://travis-ci.org/jlefebure/spring-boot-starter-minio.svg?branch=master)](https://travis-ci.org/jlefebure/spring-boot-starter-minio)
+
 Spring Boot Starter which allow to connect to a Minio bucket, to save, get, remove an object. The starter also embed 
 metrics and health check for Actuator.  
 

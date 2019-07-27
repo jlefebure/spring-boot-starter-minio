@@ -1,13 +1,10 @@
-package com.github.jlefebure.minio;
+package io.github.jlefebure.minio;
 
-import io.micrometer.core.instrument.MeterRegistry;
 import io.minio.MinioClient;
 import io.minio.errors.*;
-import org.graalvm.compiler.lir.amd64.AMD64Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.xmlpull.v1.XmlPullParserException;
 

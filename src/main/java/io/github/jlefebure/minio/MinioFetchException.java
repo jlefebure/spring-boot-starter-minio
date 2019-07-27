@@ -1,4 +1,4 @@
-package com.github.jlefebure.minio;
+package io.github.jlefebure.minio;
 
 
 /**

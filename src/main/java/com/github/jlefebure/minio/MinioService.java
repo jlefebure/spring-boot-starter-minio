@@ -1,15 +1,12 @@
 package com.github.jlefebure.minio;
 
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import io.minio.MinioClient;
 import io.minio.Result;
 import io.minio.errors.*;
 import io.minio.messages.Item;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -22,6 +19,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+
+/**
+ * Service class to interact with Minio bucket. This class is register as a bean and use the properties defined in {@link MinioConfigurationProperties}.
+ * All methods return an {@link MinioException} which wrap the Minio SDK exception.
+ * The bucket name is provided with the one defined in the configuration properties.
+ */
 @Service
 public class MinioService {
 
@@ -32,9 +35,9 @@ public class MinioService {
     private MinioConfigurationProperties configurationProperties;
 
     /**
-     * List all files at root path of the bucket
+     * List all objects at root of the bucket
      *
-     * @return List of all items at the root path of the bucket
+     * @return List of items
      * @throws MinioException if an error occur while fetch list
      */
     public List<Item> list() throws MinioException {
@@ -47,9 +50,9 @@ public class MinioService {
     }
 
     /**
-     * List all files at root path of the bucket
+     * List all objects with the prefix given in parameter for the bucket
      *
-     * @return List of all items at the root path of the bucket
+     * @return List of items
      * @throws MinioException if an error occur while fetch list
      */
     public List<Item> list(Path path) throws MinioException {
@@ -61,6 +64,11 @@ public class MinioService {
         }
     }
 
+    /**
+     * Utility method which map results to items and return a list
+     * @param myObjects Iterable of results
+     * @return List of items
+     */
     private List<Item> getItems(Iterable<Result<Item>> myObjects) {
         return StreamSupport
                 .stream(myObjects.spliterator(), true)
@@ -84,11 +92,11 @@ public class MinioService {
 
 
     /**
-     * Get an object from Minio with the full path to the object
+     * Get an object from Minio
      *
-     * @param path Path with all prefixes to the object
+     * @param path Path with prefix to the object. Object name must be included.
      * @return The object as an InputStream
-     * @throws MinioException
+     * @throws MinioException if an error occur while fetch object
      */
     public InputStream get(Path path) throws MinioException {
         try {
@@ -101,9 +109,9 @@ public class MinioService {
     /**
      * Get a file from Minio, and save it in the {@code fileName} file
      *
-     * @param source
-     * @param fileName
-     * @throws MinioException
+     * @param source Path with prefix to the object. Object name must be included.
+     * @param fileName Filename
+     * @throws MinioException if an error occur while fetch object
      */
     public void getAndSave(Path source, String fileName) throws MinioException {
         try {
@@ -114,12 +122,13 @@ public class MinioService {
     }
 
     /**
-     * Save a file to Minio
-     *
-     * @param source
-     * @throws MinioException
+     * Upload a file to Minio
+     * @param source Path with prefix to the object. Object name must be included.
+     * @param file File as an inputstream
+     * @param contentType MIME type for the object
+     * @throws MinioException if an error occur while uploading object
      */
-    public void put(Path source, InputStream file, ContentType contentType) throws MinioException {
+    public void upload(Path source, InputStream file, ContentType contentType) throws MinioException {
         try {
             minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, contentType.getMimeType());
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
@@ -128,12 +137,13 @@ public class MinioService {
     }
 
     /**
-     * Save a file to Minio
-     *
-     * @param source
-     * @throws MinioException
+     * Upload a file to Minio
+     * @param source Path with prefix to the object. Object name must be included.
+     * @param file File as an inputstream
+     * @param contentType MIME type for the object
+     * @throws MinioException if an error occur while uploading object
      */
-    public void put(Path source, InputStream file, String contentType) throws MinioException {
+    public void upload(Path source, InputStream file, String contentType) throws MinioException {
         try {
             minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, contentType);
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
@@ -144,8 +154,8 @@ public class MinioService {
     /**
      * Remove a file to Minio
      *
-     * @param source
-     * @throws MinioException
+     * @param source Path with prefix to the object. Object name must be included.
+     * @throws MinioException if an error occur while uploading object
      */
     public void remove(Path source) throws MinioException {
         try {

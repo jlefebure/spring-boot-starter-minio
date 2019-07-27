@@ -10,22 +10,22 @@ import java.time.Duration;
 @ConfigurationProperties("spring.minio")
 public class MinioConfigurationProperties {
     /**
-     * URL for Minio instance
+     * URL for Minio instance. Can include the HTTP scheme. Must include the port. If the port is not provided, then the port of the HTTP is taken.
      */
     private String url = "https://play.min.io";
 
     /**
-     * Access key (login) on Minio
+     * Access key (login) on Minio instance
      */
     private String accessKey = "Q3AM3UQ867SPQQA43P2F";
 
     /**
-     * Secret key (password) on Minio
+     * Secret key (password) on Minio instance
      */
     private String secretKey = "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG";
 
     /**
-     * Set the connection to secured (HTTPS).
+     * If the scheme is not provided in {@code url} property, define if the connection is done via HTTP or HTTPS.
      */
     private boolean secure = false;
 
@@ -36,12 +36,23 @@ public class MinioConfigurationProperties {
     private String bucket;
 
     /**
-     * URL for Minio instance
+     * Metric configuration prefix which are registered on Actuator.
      */
     private String metricName = "minio.storage";
 
+    /**
+     * Define the connect timeout for the Minio Client.
+     */
     private Duration connectTimeout = Duration.ofSeconds(10);
+
+    /**
+     * Define the write timeout for the Minio Client.
+     */
     private Duration writeTimeout = Duration.ofSeconds(60);
+
+    /**
+     * Define the read timeout for the Minio Client.
+     */
     private Duration readTimeout = Duration.ofSeconds(10);
 
     public Duration getConnectTimeout() {

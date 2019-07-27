@@ -115,6 +115,7 @@ public class MinioMetricConfiguration {
                 .register(meterRegistry);
     }
 
+
     @ConditionalOnBean(MinioClient.class)
     @Around("execution(* io.minio.MinioClient.getObject(..))")
     public Object getMeter(ProceedingJoinPoint pjp) throws Throwable {

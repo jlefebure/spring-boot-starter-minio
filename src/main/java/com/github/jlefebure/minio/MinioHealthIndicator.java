@@ -15,6 +15,10 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+
+/**
+ * Set the Minio health indicator on Actuator.
+ */
 @Component
 public class MinioHealthIndicator implements HealthIndicator {
 
@@ -23,6 +27,7 @@ public class MinioHealthIndicator implements HealthIndicator {
 
     @Autowired
     private MinioConfigurationProperties minioConfigurationProperties;
+
 
     @Override
     public Health health() {

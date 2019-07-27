@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Configuration
 @ConditionalOnClass(MinioClient.class)
-@ConditionalOnBean(MinioClient.class)
 @ConditionalOnEnabledHealthIndicator("minio")
 @AutoConfigureBefore(HealthIndicatorAutoConfiguration.class)
 @AutoConfigureAfter(MinioConfiguration.class)
@@ -90,13 +89,13 @@ public class MinioMetricConfiguration {
                 .register(meterRegistry);
 
         listBucketOkTimer = Timer
-                .builder(minioConfigurationProperties.getMetricName())
+                .builder(minioConfigurationProperties.getMetricName() + ".list.bucket")
                 .tag("operation", "listBuckets")
                 .tag("status", "ok")
                 .register(meterRegistry);
 
         listBucketKoTimer = Timer
-                .builder(minioConfigurationProperties.getMetricName())
+                .builder(minioConfigurationProperties.getMetricName() + ".list.bucket")
                 .tag("operation", "listBuckets")
                 .tag("status", "ko")
                 .register(meterRegistry);
@@ -105,12 +104,14 @@ public class MinioMetricConfiguration {
                 .builder(minioConfigurationProperties.getMetricName())
                 .tag("operation", "removeObject")
                 .tag("status", "ok")
+                .tag("bucket", minioConfigurationProperties.getBucket())
                 .register(meterRegistry);
 
         removeKoTimer = Timer
                 .builder(minioConfigurationProperties.getMetricName())
                 .tag("operation", "removeObject")
                 .tag("status", "ko")
+                .tag("bucket", minioConfigurationProperties.getBucket())
                 .register(meterRegistry);
     }
 

@@ -21,7 +21,7 @@ Maven
 
 Gradle 
 ```groovy
-    implementation 'com.github.jlefebure:spring-boot-starter-minio:2.1.6.RELEASE'
+    implementation 'io.github.jlefebure:spring-boot-starter-minio:2.1.6.RELEASE'
 ```
 
 

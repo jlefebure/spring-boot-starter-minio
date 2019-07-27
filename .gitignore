@@ -1,0 +1,46 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### Generated sources ###
+/src/generated/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+###Modules
+/fastr-rest-application/target/
+/fastr-rest-crud-oracle/target/
+/fastr-rest-crud-mongodb/target/
+/fastr-rest-ws-v1/target/
+
+##Mac os files
+.DS_Store
+/fastr-rest-application/.DS_Store
+/fastr-rest-crud-oracle/.DS_Store
+/fastr-rest-crud-mongodb/.DS_Store
+/fastr-rest-ws-v1/.DS_Store
+
+
+##logs
+*.log
+/*/logs

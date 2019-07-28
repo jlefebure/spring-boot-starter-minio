@@ -22,6 +22,12 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
     <servers>
+
+        <server>
+            <id>gpg.passphrase</id>
+            <passphrase>${env.PASSPHRASE}</passphrase>
+        </server>
+
         <server>
             <id>ossrh</id>
             <username>${env.SONATYPE_USERNAME}</username>
@@ -29,4 +35,17 @@
         </server>
     </servers>
 
+
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <gpg.executable>gpg2</gpg.executable>
+                <gpg.passphrase>${env.PASSPHRASE}</gpg.passphrase>
+            </properties>
+        </profile>
+    </profiles>
 </settings>

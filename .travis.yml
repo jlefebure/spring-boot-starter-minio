@@ -5,7 +5,7 @@ jdk:
 install: mvn -DskipTests -Dgpg.skip install
 after_success:
 - gpg2 --batch --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import
-  signingkey.asc
+  travis/signingkey.asc
 - gpg2 --batch --passphrase $PASSPHRASE --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg
   --no-default-keyring --import travis/signingkey.asc
 - mvn clean deploy --settings travis/settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=6246B5BC9734B4AB443367BB82196372D0DEC8BD

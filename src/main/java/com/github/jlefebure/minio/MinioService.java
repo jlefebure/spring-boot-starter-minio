@@ -40,6 +40,8 @@ import java.util.stream.StreamSupport;
  * Service class to interact with Minio bucket. This class is register as a bean and use the properties defined in {@link MinioConfigurationProperties}.
  * All methods return an {@link com.github.jlefebure.minio.MinioException} which wrap the Minio SDK exception.
  * The bucket name is provided with the one defined in the configuration properties.
+ *
+ * @author Jordan LEFEBURE
  */
 @Service
 public class MinioService {
@@ -68,6 +70,7 @@ public class MinioService {
     /**
      * List all objects with the prefix given in parameter for the bucket
      *
+     * @param path Prefix of seeked list of object
      * @return List of items
      * @throws com.github.jlefebure.minio.MinioException if an error occur while fetch list
      */

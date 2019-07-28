@@ -31,6 +31,8 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Set the Minio health indicator on Actuator.
+ *
+ * @author Jordan LEFEBURE
  */
 @Component
 public class MinioHealthIndicator implements HealthIndicator {

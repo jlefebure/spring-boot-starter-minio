@@ -7,15 +7,14 @@ metrics and health check for Actuator.
 
 ## Quick start
 
-Just add the dependency to an existing Spring Boot project. Versions follow official releases of Spring Boot. The library
-version start at 2.1.6.RELEASE. 
+Just add the dependency to an existing Spring Boot project.
 
 Maven
 ```xml
 <dependency>
     <groupId>com.github.jlefebure</groupId>
     <artifactId>spring-boot-starter-minio</artifactId>
-    <version>2.1.6.RELEASE</version>
+    <version>1.0</version>
 </dependency>
 ```
 

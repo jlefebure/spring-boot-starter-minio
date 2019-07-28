@@ -6,7 +6,7 @@ install: mvn -DskipTests -Dgpg.skip install
 after_success:
   - gpg2 --batch --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import signingkey.asc
   - gpg2 --batch --passphrase $PASSPHRASE --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg --no-default-keyring --import signingkey.asc
-  - mvn clean deploy --settings .mvn/settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=5F84CD1775351968CABF0B0D779D2423E1D24D89
+  - mvn clean deploy --settings .mvn/settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=3A2DA16E8823C432294867518BD451B0C29AE48D
     -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
 deploy:
   provider: releases

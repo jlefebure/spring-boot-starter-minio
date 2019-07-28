@@ -121,8 +121,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-
     </dependencies>
+
+    <!-- This is necessary because de gpg plugin is kind messy for a macOS dev using Travis ... -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <url>http://repository.apache.org/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
@@ -157,10 +164,11 @@
                 </executions>
             </plugin>
 
+            <!-- This is necessary because de gpg plugin is kind messy for a macOS dev using Travis ... -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>1.7-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

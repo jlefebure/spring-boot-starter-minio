@@ -2,8 +2,13 @@ language: java
 jdk:
 - oraclejdk11
 - oraclejdk12
-
-
+install: mvn -DskipTests -Dgpg.skip install
+after_success:
+  - gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import signingkey.asc
+  - gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg --no-default-keyring
+    --import signingkey.asc
+  - mvn clean deploy --settings .mvn/settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=5F84CD1775351968CABF0B0D779D2423E1D24D89
+    -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
 deploy:
   provider: releases
   file_glob: true
@@ -13,3 +18,11 @@ deploy:
   on:
     tags: true
     repo: jlefebure/spring-boot-starter-minio
+env:
+  global:
+  - secure: gw2h+VjLmooyLss9j3tSlUlBPn1UUZeOmhVSG2dKLScy7UQy7/HI+DD86ISjpMadp/CLKsvrCvaQ1r7AHOimRor4W7YUY/SoonrBDbXx4BSGSkZcMK5tNaJ73xDg7fhvW+vbwHTiAyETtyB8oYsrpkTkGK921NLfTS1kgKERaXi3FFW3RKmOv0NJfgz8ZriJleIksQ42kPVl2mBlwD5LugAJFfT6JHWwfG8nOCXSoIAa06JmoqK0zeZCpxARASbO4IqiZ7rOuRb1Yq40LMiSP3925IDQG7P2nPk4hDiqjvAD7R0DNsMySg4FB7HLEgz8ojD2EobSbbsvcEPT9KCozlgH2LowwcpcQsyGDeX3x40q4D2hv8UGwf9yKcKluSFnD3ujsD8L8rZva1toy5x7Me9UW5/zcOCqWfHxYFcIXC+owdClMbN9cQH/AWkkdw+vn5BehG3hooBjwY7UTlu/zTMphn6zR7+CrvHxO536XGlPwZBiqE9ta0I6KZka2Qob2MKOR6Wp1ruSTFH6Wjc/5woaljWSR1zGAVjxgh1HsI6mLyE9IOo3D8+5TyRgaeB2djBahceU92e7wc7J5x3rjmBgiRwSTq+AVshkOAmV2Ael0jiw5v7L2JRkJxizbHF6JZalnXjvuoylqOeR2ldoBUc6tA5xV9elQgkWSPujL1Y=
+  - secure: h3IB7Ez5f4y26J1vFQ943MJVkHCRxrIB9eGdr0tOYRGi4ZlaqG5Gf1kabhNc64iJuK9p9ziR5ebp84ySZDGVdUE28xnxoI37HGUturbBmb/qjK82HzZIXFKwoBdO2MTplYLCy+0fAyeftg5BX8/esKSTXR5qZeGeHNvQZS6BABwc7GhwEPVzVp1KZ+OMpRIT8AKlXTDO4vQ8ycR0Efd9Rz2eZRDPSS3F33T25hCjKdbWaWosZzkHMgSITBB0fB5RmbAwAH+DHf19OhwIIQDsw0FCKm/94DXu2VkUWcw3GM+bsnkVsULLDpdfJCzMDBVEMSwaNyFUiIJ/+G1vj86TheF3Nv9ni/sTSMUmazZfFy0/uRiliqZNCLGRvwJGkvs09BDXKfUXFwpj+sng0ZTkHazUPMWl03lu+FKUDCNV74amFdru2rMMLsJ3iaK0yTvVlJg1ikN+BjBb3MZumBkXnc05LUvcXSH7If3WmMssoCxNmAHii5hujLxDQ3D/OKyMsVXfuADTjekGHPXu8VyT2lZZrdSmHOWMc7kLclhA05D5/XR7xV4CCVNdMQRmpAkBNDK6FCbOGA29mRyVD+Ozz83bfbsHgptL7/qRxKNLG18xU3ku+rxb3wSqBdZJnd52+eFn9nTrdHNMV2ZHjdIdWyAVNzVtuAVXWrah2ZLFaTw=
+  - secure: QUCuMRDiVkmqukWToa/EApkuLJl9RsddTshxK7OtSELqQ906K9NmW7L0oL62creSrBcQ6GL3oVVq5bHoO/FTsiK/hgQ+mxvjo5KWygEJYM/I8tpEuH4UmL/DyrhkQRz7NW0QqdojI/yPqLTVQC6Ix3fjYDwjx0H2Fr3wGe8UpNdlsbhAU+2dNc7v0q4Yn4hMszKx40DgRmRVCYGSdphoUGuUtgMeHdTChSzHqpIhGhvkIyx2xnt4LIdHuFSt8NO2XXBrPk54VcGE9KzW+XXKTPn2ITtuN4IrAFqcEZRmXfmmWcjUZUuu5xhSQ9zgdBB+gdQffmNuMUeZwZiqhngTYZb4o7s4Fd582HEzQtbXvpTTa+jp42IZWwRDQMk08fTMKjK8+74h5UdbNZRQjssNH+oPBTDCsbXDlGVoVYDnPP9ukcaBEf370RHF5fOG3NWLU5ZjNKE0WHA7sSFygUfCyKz/Qf3U0bH3NRqctQzdWMYNOHImrv6IW9lZ8NrdUO6W2ML4I5T5M/sewaEvyn8Nn0j131IvYty6swBnhTrgNnsRjVNBcueFCZQXfjv0AePi9yhlR3k2mI5FbOg0IUtAX3RJDGXA3wJhi4gil/TNZa9gIRiTR8/VJgb7br55CcrkdnSeZEtFY54c/4JKcgqAVOBwFLgoRHJ6s7sBW+Z6vVA=
+before_install:
+- openssl aes-256-cbc -K $encrypted_8641e756fc24_key -iv $encrypted_8641e756fc24_iv
+  -in signingkey.asc.enc -out signingkey.asc -d

@@ -8,7 +8,7 @@ after_success:
   travis/signingkey.asc
 - gpg --batch --passphrase $PASSPHRASE --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg
   --no-default-keyring --import travis/signingkey.asc
-- mvn clean deploy -Dgpg.executable=gpg -Dgpg.keyname=6246B5BC9734B4AB443367BB82196372D0DEC8BD
+- mvn clean deploy -s travis/settings.xml -Dgpg.executable=gpg -Dgpg.keyname=6246B5BC9734B4AB443367BB82196372D0DEC8BD
   -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
 deploy:
   provider: releases

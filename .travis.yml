@@ -1,6 +1,5 @@
 language: java
 jdk:
-- oraclejdk11
 - oraclejdk12
 install: mvn -DskipTests -Dgpg.skip install
 after_success:

@@ -75,6 +75,7 @@ public class MinioService {
      * @throws com.github.jlefebure.minio.MinioException if an error occur while fetch list
      */
     public List<Item> list(Path path) throws com.github.jlefebure.minio.MinioException {
+
         try {
             Iterable<Result<Item>> myObjects = minioClient.listObjects(configurationProperties.getBucket(), path.toString());
             return getItems(myObjects);

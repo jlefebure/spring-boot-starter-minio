@@ -87,6 +87,22 @@ You can always use directly the `MinioClient` from the original SDK, which is de
 private MinioClient minioClient;
 ```
 
+## Notifications
+
+You can handle notifications from the bucket via `MinioClient` instance, or simply by adding a method with `@MinioNotification` at top.
+The method must be in a declared Spring bean to be handled.
+
+The following example print "Hello world" each time an object is download from Minio bucket.
+
+```java
+    @MinioNotification({"s3:ObjectAccessed:Get"})
+    public void handleGet(NotificationInfo notificationInfo) {
+        System.out.println("Hello world");
+    }
+```
+
+To work, your method must have only one parameter of class `NotificationInfo` and return `void`.
+
 ## Actuator
 
 The starter add to Actuator some metrics and an health check to give a status on Minio connection.

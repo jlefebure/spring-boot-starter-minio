@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.jlefebure.minio;
+package com.jlefebure.spring.boot.minio;
 
 import io.minio.MinioClient;
 import io.minio.errors.*;
@@ -35,7 +35,7 @@ import java.security.NoSuchAlgorithmException;
 @Configuration
 @ConditionalOnClass(MinioClient.class)
 @EnableConfigurationProperties(MinioConfigurationProperties.class)
-@ComponentScan("com.github.jlefebure.minio")
+@ComponentScan("com.jlefebure.spring.boot.minio")
 public class MinioConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MinioConfiguration.class);

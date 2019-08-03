@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.jlefebure.minio;
+package com.jlefebure.spring.boot.minio;
 
 
 import org.springframework.beans.factory.annotation.Value;
@@ -46,9 +46,8 @@ public class MinioConfigurationProperties {
     private boolean secure = false;
 
     /**
-     * Bucket name for the application. Default value is the application name as defined in application.properties. The bucket must already exists on Minio.
+     * Bucket name for the application. The bucket must already exists on Minio.
      */
-    @Value("${spring.application.name}")
     private String bucket;
 
     /**

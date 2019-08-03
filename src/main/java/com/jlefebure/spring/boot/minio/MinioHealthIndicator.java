@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.jlefebure.minio;
+package com.jlefebure.spring.boot.minio;
 
 import io.minio.MinioClient;
 import io.minio.errors.*;

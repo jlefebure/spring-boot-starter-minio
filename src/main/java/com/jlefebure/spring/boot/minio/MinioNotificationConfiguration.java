@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-package com.jlefebure.minio;
+package com.jlefebure.spring.boot.minio;
 
 
-import com.jlefebure.minio.notification.MinioNotification;
+import com.jlefebure.spring.boot.minio.notification.MinioNotification;
 import io.minio.MinioClient;
 import io.minio.errors.*;
 import io.minio.notification.NotificationInfo;

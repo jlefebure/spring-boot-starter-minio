@@ -14,13 +14,13 @@ Maven
 <dependency>
     <groupId>com.jlefebure</groupId>
     <artifactId>spring-boot-starter-minio</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
 Gradle 
 ```groovy
-    implementation 'com.jlefebure:spring-boot-starter-minio:1.0'
+    implementation 'com.jlefebure:spring-boot-starter-minio:1.1'
 ```
 
 

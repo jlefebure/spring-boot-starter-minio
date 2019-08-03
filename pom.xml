@@ -25,7 +25,7 @@
         <version>2.1.6.RELEASE</version>
     </parent>
 
-    <groupId>com.github.jlefebure</groupId>
+    <groupId>com.jlefebure</groupId>
     <artifactId>spring-boot-starter-minio</artifactId>
 
     <properties>
@@ -40,7 +40,7 @@
         <developer>
             <email>jordan.lefebure@gmail.com</email>
             <name>Jordan LEFEBURE</name>
-            <url>https://github.com/jlefebure</url>
+            <url>https://jlefebure.com/</url>
             <id>jlefebure</id>
         </developer>
     </developers>
@@ -52,7 +52,7 @@
 
     <organization>
         <name>Jordan LEFEBURE</name>
-        <url>http://www.jlefebure.com/</url>
+        <url>https://www.jlefebure.com/</url>
     </organization>
 
     <licenses>
@@ -80,7 +80,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
 
     <dependencies>
         <dependency>

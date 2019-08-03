@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-package com.github.jlefebure.minio;
+package com.jlefebure.minio;
 
 
-import com.github.jlefebure.minio.notification.MinioNotification;
+import com.jlefebure.minio.notification.MinioNotification;
 import io.minio.MinioClient;
 import io.minio.errors.*;
 import io.minio.notification.NotificationInfo;

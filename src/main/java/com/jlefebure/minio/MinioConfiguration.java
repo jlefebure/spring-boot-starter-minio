@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.github.jlefebure.minio;
+package com.jlefebure.minio;
 
 import io.minio.MinioClient;
 import io.minio.errors.*;

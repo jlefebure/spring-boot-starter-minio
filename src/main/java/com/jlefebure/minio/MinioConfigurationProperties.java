@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.github.jlefebure.minio;
+package com.jlefebure.minio;
 
 
 import org.springframework.beans.factory.annotation.Value;

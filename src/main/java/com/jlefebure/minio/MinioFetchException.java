@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-package com.github.jlefebure.minio;
+package com.jlefebure.minio;
 
 
 /**
- * Wrapper exception for all Minio errors that occurs while fetching, removing, uploading an object to Minio.
+ * Runtime exception thrown when an error occur while fetching a list of objects.
  * @author Jordan LEFEBURE
  */
-public class MinioException extends Exception {
-    public MinioException(String message, Throwable cause) {
+public class MinioFetchException extends RuntimeException{
+    public MinioFetchException(String message, Throwable cause) {
         super(message, cause);
     }
 }

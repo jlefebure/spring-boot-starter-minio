@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.github.jlefebure.minio.notification;
+package com.jlefebure.minio.notification;
 
 import org.springframework.scheduling.annotation.Async;
 

@@ -12,7 +12,7 @@ Just add the dependency to an existing Spring Boot project.
 Maven
 ```xml
 <dependency>
-    <groupId>com.github.jlefebure</groupId>
+    <groupId>com.jlefebure</groupId>
     <artifactId>spring-boot-starter-minio</artifactId>
     <version>1.0</version>
 </dependency>
@@ -20,7 +20,7 @@ Maven
 
 Gradle 
 ```groovy
-    implementation 'com.github.jlefebure:spring-boot-starter-minio:1.0'
+    implementation 'com.jlefebure:spring-boot-starter-minio:1.0'
 ```
 
 

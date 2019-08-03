@@ -34,7 +34,7 @@
         <minio.version>6.0.8</minio.version>
     </properties>
 
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
 
     <developers>
         <developer>
@@ -67,7 +67,7 @@
         <url>https://github.com/jlefebure/spring-boot-starter-minio.git</url>
         <connection>scm:git:https://github.com/jlefebure/spring-boot-starter-minio.git</connection>
         <developerConnection>scm:git:https://github.com/jlefebure/spring-boot-starter-minio.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>1.1</tag>
   </scm>
 
     <distributionManagement>

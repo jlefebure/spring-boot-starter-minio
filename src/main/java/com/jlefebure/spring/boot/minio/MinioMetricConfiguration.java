@@ -26,6 +26,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
 import org.springframework.boot.actuate.autoconfigure.health.HealthIndicatorAutoConfiguration;
+import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -37,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 @Aspect
 @Configuration
-@ConditionalOnClass(MinioClient.class)
+@ConditionalOnClass({MinioClient.class, ManagementContextAutoConfiguration.class})
 @ConditionalOnEnabledHealthIndicator("minio")
 @AutoConfigureBefore(HealthIndicatorAutoConfiguration.class)
 @AutoConfigureAfter(MinioConfiguration.class)

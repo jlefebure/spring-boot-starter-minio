@@ -19,8 +19,10 @@ package com.jlefebure.spring.boot.minio;
 import io.minio.MinioClient;
 import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -34,6 +36,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Jordan LEFEBURE
  */
+@ConditionalOnClass(ManagementContextAutoConfiguration.class)
 @Component
 public class MinioHealthIndicator implements HealthIndicator {
 

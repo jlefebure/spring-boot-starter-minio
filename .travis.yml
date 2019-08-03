@@ -1,7 +1,7 @@
 language: java
 jdk:
 - oraclejdk12
-install: mvn -DskipTests install -P ossrh
+install: mvn -DskipTests -Dgpg.skip install
 after_success:
 - gpg --batch --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import
   travis/signingkey.asc

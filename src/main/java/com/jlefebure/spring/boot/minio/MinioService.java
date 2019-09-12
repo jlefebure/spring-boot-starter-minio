@@ -19,6 +19,7 @@ package com.jlefebure.spring.boot.minio;
 
 import io.minio.MinioClient;
 import io.minio.Result;
+import io.minio.ServerSideEncryption;
 import io.minio.errors.*;
 import io.minio.messages.Item;
 import org.apache.http.entity.ContentType;
@@ -31,7 +32,10 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -111,7 +115,6 @@ public class MinioService {
                 .collect(Collectors.toList());
     }
 
-
     /**
      * Get an object from Minio
      *
@@ -130,7 +133,7 @@ public class MinioService {
     /**
      * Get a file from Minio, and save it in the {@code fileName} file
      *
-     * @param source Path with prefix to the object. Object name must be included.
+     * @param source   Path with prefix to the object. Object name must be included.
      * @param fileName Filename
      * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while fetch object
      */
@@ -144,14 +147,16 @@ public class MinioService {
 
     /**
      * Upload a file to Minio
-     * @param source Path with prefix to the object. Object name must be included.
-     * @param file File as an inputstream
+     *
+     * @param source      Path with prefix to the object. Object name must be included.
+     * @param file        File as an inputstream
      * @param contentType MIME type for the object
+     * @param headers     Additional headers to put on the file. The map MUST be mutable
      * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
      */
-    public void upload(Path source, InputStream file, ContentType contentType) throws com.jlefebure.spring.boot.minio.MinioException {
+    public void upload(Path source, InputStream file, ContentType contentType, Map<String, String> headers) throws com.jlefebure.spring.boot.minio.MinioException {
         try {
-            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, contentType.getMimeType());
+            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), headers, null,  contentType.getMimeType());
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
@@ -159,24 +164,59 @@ public class MinioService {
 
     /**
      * Upload a file to Minio
-     * @param source Path with prefix to the object. Object name must be included.
-     * @param file File as an inputstream
+     *
+     * @param source      Path with prefix to the object. Object name must be included.
+     * @param file        File as an inputstream
      * @param contentType MIME type for the object
      * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
      */
-    public void upload(Path source, InputStream file, String contentType) throws com.jlefebure.spring.boot.minio.MinioException {
+    public void upload(Path source, InputStream file, ContentType contentType) throws com.jlefebure.spring.boot.minio.MinioException {
         try {
-            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, contentType);
+            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), Collections.EMPTY_MAP, null,  contentType.getMimeType());
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
 
     /**
+     * Upload a file to Minio
+     *
+     * @param source      Path with prefix to the object. Object name must be included.
+     * @param file        File as an inputstream
+     * @param contentType MIME type for the object
+     * @param headers     Additional headers to put on the file. The map MUST be mutable
+     * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
+     */
+    public void upload(Path source, InputStream file, String contentType, Map<String, String> headers) throws com.jlefebure.spring.boot.minio.MinioException {
+        try {
+            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), headers, null,  contentType);
+        } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
+            throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
+        }
+    }
+
+    /**
+     * Upload a file to Minio
+     *
+     * @param source      Path with prefix to the object. Object name must be included.
+     * @param file        File as an inputstream
+     * @param contentType MIME type for the object
+     * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
+     */
+    public void upload(Path source, InputStream file, String contentType) throws com.jlefebure.spring.boot.minio.MinioException {
+        try {
+            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), Collections.EMPTY_MAP, null,  contentType);
+        } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException e) {
+            throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
+        }
+    }
+
+
+    /**
      * Remove a file to Minio
      *
      * @param source Path with prefix to the object. Object name must be included.
-     * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
+     * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while removing object
      */
     public void remove(Path source) throws com.jlefebure.spring.boot.minio.MinioException {
         try {

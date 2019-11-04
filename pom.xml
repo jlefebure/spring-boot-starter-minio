@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starters</artifactId>
-        <version>2.1.6.RELEASE</version>
+        <version>2.2.0.RELEASE</version>
     </parent>
 
     <groupId>com.jlefebure</groupId>
@@ -31,7 +31,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <minio.version>6.0.8</minio.version>
+        <minio.version>6.0.11</minio.version>
     </properties>
 
     <version>1.2-SNAPSHOT</version>

@@ -63,7 +63,7 @@ public class MinioHealthIndicator implements HealthIndicator {
                         .withDetail("bucketName", minioConfigurationProperties.getBucket())
                         .build();
             }
-        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException e) {
+        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidResponseException e) {
             return Health.down(e)
                     .withDetail("bucketName", minioConfigurationProperties.getBucket())
                     .build();

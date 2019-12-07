@@ -70,6 +70,18 @@ public class MinioConfigurationProperties {
      */
     private Duration readTimeout = Duration.ofSeconds(10);
 
+    /**
+     * Check if the bucket exists on Minio instance.
+     * Settings this false will disable the check during the application context initialization.
+     * This property should be used for debug purpose only, because operations on Minio will not work during runtime.
+     */
+    private boolean checkBucket = true;
+
+    /**
+     * Will create the bucket if it do not exists on the Minio instance.
+     */
+    private boolean createBucket = true;
+
     public Duration getConnectTimeout() {
         return connectTimeout;
     }
@@ -140,5 +152,21 @@ public class MinioConfigurationProperties {
 
     public void setMetricName(String metricName) {
         this.metricName = metricName;
+    }
+
+    public boolean isCheckBucket() {
+        return checkBucket;
+    }
+
+    public void setCheckBucket(boolean checkBucket) {
+        this.checkBucket = checkBucket;
+    }
+
+    public boolean isCreateBucket() {
+        return createBucket;
+    }
+
+    public void setCreateBucket(boolean createBucket) {
+        this.createBucket = createBucket;
     }
 }

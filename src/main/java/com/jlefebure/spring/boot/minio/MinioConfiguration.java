@@ -44,35 +44,47 @@ public class MinioConfiguration {
     private MinioConfigurationProperties minioConfigurationProperties;
 
     @Bean
-    public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, NoResponseException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException {
+    public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, NoResponseException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException, MinioException {
 
         MinioClient minioClient = null;
         try {
             minioClient = new MinioClient(
-                    minioConfigurationProperties.getUrl(),
-                    minioConfigurationProperties.getAccessKey(),
-                    minioConfigurationProperties.getSecretKey(),
-                    minioConfigurationProperties.isSecure()
+                minioConfigurationProperties.getUrl(),
+                minioConfigurationProperties.getAccessKey(),
+                minioConfigurationProperties.getSecretKey(),
+                minioConfigurationProperties.isSecure()
             );
             minioClient.setTimeout(
-                    minioConfigurationProperties.getConnectTimeout().toMillis(),
-                    minioConfigurationProperties.getWriteTimeout().toMillis(),
-                    minioConfigurationProperties.getReadTimeout().toMillis()
+                minioConfigurationProperties.getConnectTimeout().toMillis(),
+                minioConfigurationProperties.getWriteTimeout().toMillis(),
+                minioConfigurationProperties.getReadTimeout().toMillis()
             );
         } catch (InvalidEndpointException | InvalidPortException e) {
             LOGGER.error("Error while connecting to Minio", e);
             throw e;
         }
 
-        try {
-            LOGGER.debug("Checking if bucket {} exists", minioConfigurationProperties.getBucket());
-            boolean b = minioClient.bucketExists(minioConfigurationProperties.getBucket());
-            if (!b) {
-                throw new InvalidBucketNameException(minioConfigurationProperties.getBucket(), "Bucket does not exists");
+        if (minioConfigurationProperties.isCheckBucket()) {
+            try {
+                LOGGER.debug("Checking if bucket {} exists", minioConfigurationProperties.getBucket());
+                boolean b = minioClient.bucketExists(minioConfigurationProperties.getBucket());
+                if (!b) {
+                    if (minioConfigurationProperties.isCreateBucket()) {
+                        try {
+                            minioClient.makeBucket(minioConfigurationProperties.getBucket());
+                        } catch (RegionConflictException e) {
+                            throw new MinioException("Cannot create bucket", e);
+                        }
+                    } else {
+                        throw new InvalidBucketNameException(minioConfigurationProperties.getBucket(), "Bucket does not exists");
+                    }
+                }
+            } catch
+            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidResponseException | MinioException
+                    e) {
+                LOGGER.error("Error while checking bucket", e);
+                throw e;
             }
-        } catch (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidResponseException e) {
-            LOGGER.error("Error while checking bucket", e);
-            throw e;
         }
 
         return minioClient;

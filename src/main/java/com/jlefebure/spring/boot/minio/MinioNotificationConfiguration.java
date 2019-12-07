@@ -94,7 +94,6 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
                                         } catch (IllegalAccessException | InvocationTargetException e) {
                                             LOGGER.error("Error while handling notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
                                             LOGGER.error("Exception is", e);
-                                            throw new IllegalStateException("Cannot access method. This is mostly a bug, please report it");
                                         }
                                     });
                         } catch (InvalidBucketNameException | InternalException | ErrorResponseException | XmlPullParserException | InvalidKeyException | IOException | InsufficientDataException | NoSuchAlgorithmException | NoResponseException | InvalidResponseException e) {

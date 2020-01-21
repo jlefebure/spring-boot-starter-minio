@@ -33,7 +33,6 @@ import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -228,7 +227,7 @@ public class MinioService {
     public void upload(Path source, InputStream file, ContentType contentType) throws
         com.jlefebure.spring.boot.minio.MinioException {
         try {
-            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), Collections.EMPTY_MAP, null, contentType.getMimeType());
+            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), null, null, contentType.getMimeType());
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException | InvalidResponseException e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
@@ -263,7 +262,7 @@ public class MinioService {
     public void upload(Path source, InputStream file, String contentType) throws
         com.jlefebure.spring.boot.minio.MinioException {
         try {
-            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), Collections.EMPTY_MAP, null, contentType);
+            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), null, null, contentType);
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException | InvalidResponseException e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }

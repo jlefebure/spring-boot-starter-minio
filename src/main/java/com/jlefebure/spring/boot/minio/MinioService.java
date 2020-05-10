@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -263,6 +264,23 @@ public class MinioService {
         com.jlefebure.spring.boot.minio.MinioException {
         try {
             minioClient.putObject(configurationProperties.getBucket(), source.toString(), file, (long) file.available(), null, null, contentType);
+        } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException | InvalidResponseException e) {
+            throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
+        }
+    }
+
+    /**
+     * Upload a file to Minio
+     * upload file bigger than Xmx size
+     * @param source      Path with prefix to the object. Object name must be included.
+     * @param file        File as an Filename
+     * @param contentType MIME type for the object
+     * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while uploading object
+     */
+    public void upload(Path source, File file, String contentType) throws
+            com.jlefebure.spring.boot.minio.MinioException {
+        try {
+            minioClient.putObject(configurationProperties.getBucket(), source.toString(), file.getAbsolutePath(),null, null, null, contentType);
         } catch (XmlPullParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | ErrorResponseException | InternalException | InvalidArgumentException | InvalidResponseException e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }

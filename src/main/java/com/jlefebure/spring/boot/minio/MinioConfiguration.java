@@ -18,6 +18,7 @@ package com.jlefebure.spring.boot.minio;
 
 import io.minio.MinioClient;
 import io.minio.errors.*;
+import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ import org.springframework.context.annotation.Configuration;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -46,14 +50,27 @@ public class MinioConfiguration {
     @Bean
     public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, NoResponseException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException, MinioException {
 
-        MinioClient minioClient = null;
+        MinioClient minioClient;
         try {
-            minioClient = new MinioClient(
-                minioConfigurationProperties.getUrl(),
-                minioConfigurationProperties.getAccessKey(),
-                minioConfigurationProperties.getSecretKey(),
-                minioConfigurationProperties.isSecure()
-            );
+            if(!configuredProxy()) {
+                minioClient = new MinioClient(
+                        minioConfigurationProperties.getUrl(),
+                        minioConfigurationProperties.getAccessKey(),
+                        minioConfigurationProperties.getSecretKey(),
+                        minioConfigurationProperties.isSecure()
+                );
+            }
+            else{
+                minioClient = new MinioClient(
+                        minioConfigurationProperties.getUrl(),
+                        0,
+                        minioConfigurationProperties.getAccessKey(),
+                        minioConfigurationProperties.getSecretKey(),
+                        null,
+                        minioConfigurationProperties.isSecure(),
+                        client()
+                );
+            }
             minioClient.setTimeout(
                 minioConfigurationProperties.getConnectTimeout().toMillis(),
                 minioConfigurationProperties.getWriteTimeout().toMillis(),
@@ -88,6 +105,22 @@ public class MinioConfiguration {
         }
 
         return minioClient;
+    }
+
+    private boolean configuredProxy(){
+        String httpHost = System.getProperty("http.proxyHost");
+        String httpPort = System.getProperty("http.proxyPort");
+        return httpHost!=null && httpPort!=null;
+    }
+    private OkHttpClient client() {
+        String httpHost = System.getProperty("http.proxyHost");
+        String httpPort = System.getProperty("http.proxyPort");
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if(httpHost!=null)
+            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpHost,Integer.parseInt(httpPort))));
+        return builder
+                .build();
     }
 
 }

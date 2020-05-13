@@ -32,7 +32,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -48,7 +47,7 @@ public class MinioConfiguration {
     private MinioConfigurationProperties minioConfigurationProperties;
 
     @Bean
-    public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, NoResponseException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException, MinioException {
+    public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException {
 
         MinioClient minioClient;
         try {
@@ -97,7 +96,7 @@ public class MinioConfiguration {
                     }
                 }
             } catch
-            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidResponseException | MinioException
+            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException  | ErrorResponseException | InternalException | InvalidResponseException | MinioException | XmlParserException
                     e) {
                 LOGGER.error("Error while checking bucket", e);
                 throw e;

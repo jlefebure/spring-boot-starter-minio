@@ -24,7 +24,6 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -63,7 +62,7 @@ public class MinioHealthIndicator implements HealthIndicator {
                         .withDetail("bucketName", minioConfigurationProperties.getBucket())
                         .build();
             }
-        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidResponseException e) {
+        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException  | XmlParserException | ErrorResponseException | InternalException | InvalidResponseException e) {
             return Health.down(e)
                     .withDetail("bucketName", minioConfigurationProperties.getBucket())
                     .build();

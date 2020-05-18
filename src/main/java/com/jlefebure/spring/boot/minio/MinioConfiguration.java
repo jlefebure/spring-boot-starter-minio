@@ -18,6 +18,7 @@ package com.jlefebure.spring.boot.minio;
 
 import io.minio.MinioClient;
 import io.minio.errors.*;
+import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import org.springframework.context.annotation.Configuration;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -44,16 +47,29 @@ public class MinioConfiguration {
     private MinioConfigurationProperties minioConfigurationProperties;
 
     @Bean
-    public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, NoResponseException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException, MinioException {
+    public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException {
 
-        MinioClient minioClient = null;
+        MinioClient minioClient;
         try {
-            minioClient = new MinioClient(
-                minioConfigurationProperties.getUrl(),
-                minioConfigurationProperties.getAccessKey(),
-                minioConfigurationProperties.getSecretKey(),
-                minioConfigurationProperties.isSecure()
-            );
+            if(!configuredProxy()) {
+                minioClient = new MinioClient(
+                        minioConfigurationProperties.getUrl(),
+                        minioConfigurationProperties.getAccessKey(),
+                        minioConfigurationProperties.getSecretKey(),
+                        minioConfigurationProperties.isSecure()
+                );
+            }
+            else{
+                minioClient = new MinioClient(
+                        minioConfigurationProperties.getUrl(),
+                        0,
+                        minioConfigurationProperties.getAccessKey(),
+                        minioConfigurationProperties.getSecretKey(),
+                        null,
+                        minioConfigurationProperties.isSecure(),
+                        client()
+                );
+            }
             minioClient.setTimeout(
                 minioConfigurationProperties.getConnectTimeout().toMillis(),
                 minioConfigurationProperties.getWriteTimeout().toMillis(),
@@ -80,7 +96,7 @@ public class MinioConfiguration {
                     }
                 }
             } catch
-            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | NoResponseException | XmlPullParserException | ErrorResponseException | InternalException | InvalidResponseException | MinioException
+            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException  | ErrorResponseException | InternalException | InvalidResponseException | MinioException | XmlParserException
                     e) {
                 LOGGER.error("Error while checking bucket", e);
                 throw e;
@@ -88,6 +104,22 @@ public class MinioConfiguration {
         }
 
         return minioClient;
+    }
+
+    private boolean configuredProxy(){
+        String httpHost = System.getProperty("http.proxyHost");
+        String httpPort = System.getProperty("http.proxyPort");
+        return httpHost!=null && httpPort!=null;
+    }
+    private OkHttpClient client() {
+        String httpHost = System.getProperty("http.proxyHost");
+        String httpPort = System.getProperty("http.proxyPort");
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if(httpHost!=null)
+            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpHost,Integer.parseInt(httpPort))));
+        return builder
+                .build();
     }
 
 }

@@ -18,9 +18,11 @@ package com.jlefebure.spring.boot.minio;
 
 
 import com.jlefebure.spring.boot.minio.notification.MinioNotification;
+import io.minio.CloseableIterator;
 import io.minio.MinioClient;
+import io.minio.Result;
 import io.minio.errors.*;
-import io.minio.notification.NotificationInfo;
+import io.minio.messages.NotificationRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -30,7 +32,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -73,8 +74,8 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
                         throw new IllegalArgumentException("Minio notification handler should have only one NotificationInfo parameter");
                     }
 
-                    if (m.getParameterTypes()[0] != NotificationInfo.class) {
-                        throw new IllegalArgumentException("Parameter should be instance of NotificationInfo");
+                    if (m.getParameterTypes()[0] != NotificationRecords.class) {
+                        throw new IllegalArgumentException("Parameter should be instance of NotificationRecords");
                     }
 
                     MinioNotification annotation = m.getAnnotation(MinioNotification.class);
@@ -84,11 +85,12 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
                         for (; ; ) {
                             try {
                                 LOGGER.info("Registering Minio handler on {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
-                                minioClient.listenBucketNotification(minioConfigurationProperties.getBucket(),
-                                    annotation.prefix(),
-                                    annotation.suffix(),
-                                    annotation.value(),
-                                    info -> {
+                                try(CloseableIterator<Result<NotificationRecords>> list = minioClient.listenBucketNotification(minioConfigurationProperties.getBucket(),
+                                        annotation.prefix(),
+                                        annotation.suffix(),
+                                        annotation.value())){
+                                    while(list.hasNext()){
+                                        NotificationRecords info = list.next().get();
                                         try {
                                             LOGGER.debug("Receive notification for method {}", m.getName());
                                             m.invoke(obj, info);
@@ -96,8 +98,10 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
                                             LOGGER.error("Error while handling notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
                                             LOGGER.error("Exception is", e);
                                         }
-                                    });
-                            } catch (InvalidBucketNameException | InternalException | ErrorResponseException | XmlPullParserException | InvalidKeyException | IOException | InsufficientDataException | NoSuchAlgorithmException | NoResponseException | InvalidResponseException e) {
+
+                                    }
+                                };
+                            } catch (InvalidBucketNameException | InternalException | ErrorResponseException | XmlParserException | InvalidKeyException | IOException | InsufficientDataException | NoSuchAlgorithmException | InvalidResponseException e) {
                                 LOGGER.error("Error while registering notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
                                 LOGGER.error("Exception is", e);
                                 throw new IllegalStateException("Cannot register handler", e);

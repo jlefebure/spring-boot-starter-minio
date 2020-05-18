@@ -31,10 +31,10 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <minio.version>6.0.11</minio.version>
+        <minio.version>7.0.2</minio.version>
     </properties>
 
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
 
     <developers>
         <developer>
@@ -42,6 +42,11 @@
             <name>Jordan LEFEBURE</name>
             <url>https://jlefebure.com/</url>
             <id>jlefebure</id>
+        </developer>
+        <developer>
+            <email>jalambadani@rajman.org</email>
+            <name>Mostafa Jalambadani</name>
+            <id>mostafa-j13</id>
         </developer>
     </developers>
 

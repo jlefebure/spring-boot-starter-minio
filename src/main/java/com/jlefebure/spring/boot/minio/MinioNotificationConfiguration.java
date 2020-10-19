@@ -19,6 +19,7 @@ package com.jlefebure.spring.boot.minio;
 
 import com.jlefebure.spring.boot.minio.notification.MinioNotification;
 import io.minio.CloseableIterator;
+import io.minio.ListenBucketNotificationArgs;
 import io.minio.MinioClient;
 import io.minio.Result;
 import io.minio.errors.*;
@@ -85,10 +86,13 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
                         for (; ; ) {
                             try {
                                 LOGGER.info("Registering Minio handler on {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
-                                try(CloseableIterator<Result<NotificationRecords>> list = minioClient.listenBucketNotification(minioConfigurationProperties.getBucket(),
-                                        annotation.prefix(),
-                                        annotation.suffix(),
-                                        annotation.value())){
+                                ListenBucketNotificationArgs args = ListenBucketNotificationArgs.builder()
+                                        .bucket(minioConfigurationProperties.getBucket())
+                                        .prefix(annotation.prefix())
+                                        .suffix(annotation.suffix())
+                                        .events(annotation.value())
+                                        .build();
+                                try(CloseableIterator<Result<NotificationRecords>> list = minioClient.listenBucketNotification(args)){
                                     while(list.hasNext()){
                                         NotificationRecords info = list.next().get();
                                         try {
@@ -101,7 +105,7 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
 
                                     }
                                 };
-                            } catch (InvalidBucketNameException | InternalException | ErrorResponseException | XmlParserException | InvalidKeyException | IOException | InsufficientDataException | NoSuchAlgorithmException | InvalidResponseException e) {
+                            } catch (InvalidBucketNameException | InternalException | ErrorResponseException | XmlParserException | InvalidKeyException | IOException | InsufficientDataException | NoSuchAlgorithmException | InvalidResponseException | ServerException e) {
                                 LOGGER.error("Error while registering notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
                                 LOGGER.error("Exception is", e);
                                 throw new IllegalStateException("Cannot register handler", e);

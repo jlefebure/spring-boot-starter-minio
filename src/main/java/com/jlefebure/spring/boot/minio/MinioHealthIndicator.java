@@ -16,6 +16,7 @@
 
 package com.jlefebure.spring.boot.minio;
 
+import io.minio.BucketExistsArgs;
 import io.minio.MinioClient;
 import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,10 @@ public class MinioHealthIndicator implements HealthIndicator {
         }
 
         try {
-            if (minioClient.bucketExists(minioConfigurationProperties.getBucket())) {
+            BucketExistsArgs args = BucketExistsArgs.builder()
+                    .bucket(minioConfigurationProperties.getBucket())
+                    .build();
+            if (minioClient.bucketExists(args)) {
                 return Health.up()
                         .withDetail("bucketName", minioConfigurationProperties.getBucket())
                         .build();
@@ -62,7 +66,7 @@ public class MinioHealthIndicator implements HealthIndicator {
                         .withDetail("bucketName", minioConfigurationProperties.getBucket())
                         .build();
             }
-        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException  | XmlParserException | ErrorResponseException | InternalException | InvalidResponseException e) {
+        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException | XmlParserException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
             return Health.down(e)
                     .withDetail("bucketName", minioConfigurationProperties.getBucket())
                     .build();

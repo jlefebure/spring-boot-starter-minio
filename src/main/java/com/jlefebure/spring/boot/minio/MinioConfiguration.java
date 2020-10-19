@@ -27,7 +27,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -47,38 +46,27 @@ public class MinioConfiguration {
     private MinioConfigurationProperties minioConfigurationProperties;
 
     @Bean
-    public MinioClient minioClient() throws InvalidEndpointException, InvalidPortException, IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, InvalidBucketNameException, XmlPullParserException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException {
+    public MinioClient minioClient() throws IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, InvalidBucketNameException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException, ServerException {
 
         MinioClient minioClient;
-        try {
-            if(!configuredProxy()) {
-                minioClient = new MinioClient(
-                        minioConfigurationProperties.getUrl(),
-                        minioConfigurationProperties.getAccessKey(),
-                        minioConfigurationProperties.getSecretKey(),
-                        minioConfigurationProperties.isSecure()
-                );
-            }
-            else{
-                minioClient = new MinioClient(
-                        minioConfigurationProperties.getUrl(),
-                        0,
-                        minioConfigurationProperties.getAccessKey(),
-                        minioConfigurationProperties.getSecretKey(),
-                        null,
-                        minioConfigurationProperties.isSecure(),
-                        client()
-                );
-            }
-            minioClient.setTimeout(
-                minioConfigurationProperties.getConnectTimeout().toMillis(),
-                minioConfigurationProperties.getWriteTimeout().toMillis(),
-                minioConfigurationProperties.getReadTimeout().toMillis()
-            );
-        } catch (InvalidEndpointException | InvalidPortException e) {
-            LOGGER.error("Error while connecting to Minio", e);
-            throw e;
+        if(!configuredProxy()) {
+            minioClient = MinioClient.builder()
+                    .endpoint(minioConfigurationProperties.getUrl())
+                    .credentials(minioConfigurationProperties.getAccessKey(), minioConfigurationProperties.getSecretKey())
+                    .build();
         }
+        else {
+            minioClient = MinioClient.builder()
+                    .endpoint(minioConfigurationProperties.getUrl())
+                    .credentials(minioConfigurationProperties.getAccessKey(), minioConfigurationProperties.getSecretKey())
+                    .httpClient(client())
+                    .build();
+        }
+        minioClient.setTimeout(
+            minioConfigurationProperties.getConnectTimeout().toMillis(),
+            minioConfigurationProperties.getWriteTimeout().toMillis(),
+            minioConfigurationProperties.getReadTimeout().toMillis()
+        );
 
         if (minioConfigurationProperties.isCheckBucket()) {
             try {
@@ -96,7 +84,7 @@ public class MinioConfiguration {
                     }
                 }
             } catch
-            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException  | ErrorResponseException | InternalException | InvalidResponseException | MinioException | XmlParserException
+            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | MinioException | XmlParserException | ServerException
                     e) {
                 LOGGER.error("Error while checking bucket", e);
                 throw e;

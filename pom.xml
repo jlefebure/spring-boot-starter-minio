@@ -21,8 +21,8 @@
 
     <parent>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starters</artifactId>
-        <version>2.2.0.RELEASE</version>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.4.RELEASE</version>
     </parent>
 
     <groupId>com.jlefebure</groupId>
@@ -31,10 +31,10 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <minio.version>7.0.2</minio.version>
+        <minio.version>7.1.4</minio.version>
     </properties>
 
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
 
     <developers>
         <developer>
@@ -72,8 +72,8 @@
         <url>https://github.com/jlefebure/spring-boot-starter-minio.git</url>
         <connection>scm:git:https://github.com/jlefebure/spring-boot-starter-minio.git</connection>
         <developerConnection>scm:git:https://github.com/jlefebure/spring-boot-starter-minio.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>

@@ -16,6 +16,7 @@
 
 package com.jlefebure.spring.boot.minio.notification;
 
+import io.minio.messages.NotificationRecords;
 import org.springframework.scheduling.annotation.Async;
 
 import java.lang.annotation.*;
@@ -23,7 +24,7 @@ import java.lang.annotation.*;
 
 /**
  * Add a listener to the Minio bucket, which handle the events given in the {@code value} parameter.
- * The annotated method should have a parameter {@link io.minio.notification.NotificationInfo} and return {@code void}.
+ * The annotated method should have a parameter {@link NotificationRecords} and return {@code void}.
  */
 
 @Async

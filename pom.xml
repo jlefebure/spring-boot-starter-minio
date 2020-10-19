@@ -21,8 +21,8 @@
 
     <parent>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <artifactId>spring-boot-starters</artifactId>
+        <version>2.1.13.RELEASE</version>
     </parent>
 
     <groupId>com.jlefebure</groupId>

@@ -16,6 +16,8 @@
 
 package com.jlefebure.spring.boot.minio;
 
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.errors.*;
 import okhttp3.OkHttpClient;
@@ -71,11 +73,17 @@ public class MinioConfiguration {
         if (minioConfigurationProperties.isCheckBucket()) {
             try {
                 LOGGER.debug("Checking if bucket {} exists", minioConfigurationProperties.getBucket());
-                boolean b = minioClient.bucketExists(minioConfigurationProperties.getBucket());
+                BucketExistsArgs existsArgs = BucketExistsArgs.builder()
+                        .bucket(minioConfigurationProperties.getBucket())
+                        .build();
+                boolean b = minioClient.bucketExists(existsArgs);
                 if (!b) {
                     if (minioConfigurationProperties.isCreateBucket()) {
                         try {
-                            minioClient.makeBucket(minioConfigurationProperties.getBucket());
+                            MakeBucketArgs makeBucketArgs = MakeBucketArgs.builder()
+                                    .bucket(minioConfigurationProperties.getBucket())
+                                    .build();
+                            minioClient.makeBucket(makeBucketArgs);
                         } catch (RegionConflictException e) {
                             throw new MinioException("Cannot create bucket", e);
                         }

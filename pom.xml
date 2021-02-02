@@ -31,7 +31,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <minio.version>7.1.4</minio.version>
+        <minio.version>8.0.3</minio.version>
     </properties>
 
     <version>1.7-SNAPSHOT</version>

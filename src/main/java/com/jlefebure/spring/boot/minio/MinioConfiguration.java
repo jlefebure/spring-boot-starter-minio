@@ -48,7 +48,7 @@ public class MinioConfiguration {
     private MinioConfigurationProperties minioConfigurationProperties;
 
     @Bean
-    public MinioClient minioClient() throws IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, InvalidBucketNameException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException, ServerException {
+    public MinioClient minioClient() throws IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException, ServerException {
 
         MinioClient minioClient;
         if(!configuredProxy()) {
@@ -84,16 +84,14 @@ public class MinioConfiguration {
                                     .bucket(minioConfigurationProperties.getBucket())
                                     .build();
                             minioClient.makeBucket(makeBucketArgs);
-                        } catch (RegionConflictException e) {
+                        } catch (Exception e) {
                             throw new MinioException("Cannot create bucket", e);
                         }
                     } else {
-                        throw new InvalidBucketNameException(minioConfigurationProperties.getBucket(), "Bucket does not exists");
+                        throw new IllegalStateException("Bucket does not exist: " + minioConfigurationProperties.getBucket());
                     }
                 }
-            } catch
-            (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | MinioException | XmlParserException | ServerException
-                    e) {
+            } catch (Exception e) {
                 LOGGER.error("Error while checking bucket", e);
                 throw e;
             }

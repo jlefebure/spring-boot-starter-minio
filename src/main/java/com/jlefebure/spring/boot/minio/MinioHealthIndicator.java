@@ -18,18 +18,12 @@ package com.jlefebure.spring.boot.minio;
 
 import io.minio.BucketExistsArgs;
 import io.minio.MinioClient;
-import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 
 /**
  * Set the Minio health indicator on Actuator.
@@ -66,7 +60,7 @@ public class MinioHealthIndicator implements HealthIndicator {
                         .withDetail("bucketName", minioConfigurationProperties.getBucket())
                         .build();
             }
-        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException | XmlParserException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             return Health.down(e)
                     .withDetail("bucketName", minioConfigurationProperties.getBucket())
                     .build();

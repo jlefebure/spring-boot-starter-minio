@@ -18,17 +18,13 @@ package com.jlefebure.spring.boot.minio;
 
 
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +126,7 @@ public class MinioService {
             .map(itemResult -> {
                 try {
                     return itemResult.get();
-                } catch (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | XmlParserException | InvalidResponseException | ErrorResponseException | InternalException | ServerException e) {
+                } catch (Exception e) {
                     throw new MinioFetchException("Error while parsing list of objects", e);
                 } 
             })
@@ -151,7 +147,7 @@ public class MinioService {
                     .object(path.toString())
                     .build();
             return minioClient.getObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -163,14 +159,14 @@ public class MinioService {
      * @return Metadata of the  object
      * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while fetching object metadatas
      */
-    public ObjectStat getMetadata(Path path) throws com.jlefebure.spring.boot.minio.MinioException {
+    public StatObjectResponse getMetadata(Path path) throws com.jlefebure.spring.boot.minio.MinioException {
         try {
             StatObjectArgs args = StatObjectArgs.builder()
                     .bucket(configurationProperties.getBucket())
                     .object(path.toString())
                     .build();
             return minioClient.statObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -181,7 +177,7 @@ public class MinioService {
      * @param paths Paths of all objects with prefix. Objects names must be included.
      * @return A map where all paths are keys and metadatas are values
      */
-    public Map<Path, ObjectStat> getMetadata(Iterable<Path> paths) {
+    public Map<Path, StatObjectResponse> getMetadata(Iterable<Path> paths) {
         return StreamSupport.stream(paths.spliterator(), false)
             .map(path -> {
                 try {
@@ -190,7 +186,7 @@ public class MinioService {
                             .object(path.toString())
                             .build();
                     return new HashMap.SimpleEntry<>(path, minioClient.statObject(args));
-                } catch (InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | XmlParserException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+                } catch (Exception e) {
                     throw new MinioFetchException("Error while parsing list of objects", e);
                 }
             })
@@ -212,7 +208,7 @@ public class MinioService {
                     .filename(fileName)
                     .build();
             minioClient.downloadObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -228,15 +224,14 @@ public class MinioService {
     public void upload(Path source, InputStream file, Map<String, String> headers) throws
         com.jlefebure.spring.boot.minio.MinioException {
         try {
-            PutObjectOptions options = new PutObjectOptions(file.available(), -1);
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(configurationProperties.getBucket())
                     .object(source.toString())
-                    .stream(file, options.objectSize(), options.partSize())
+                    .stream(file, file.available(), -1)
                     .headers(headers)
                     .build();
             minioClient.putObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -251,14 +246,13 @@ public class MinioService {
     public void upload(Path source, InputStream file) throws
         com.jlefebure.spring.boot.minio.MinioException {
         try {
-            PutObjectOptions options = new PutObjectOptions(file.available(), -1);
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(configurationProperties.getBucket())
                     .object(source.toString())
-                    .stream(file, options.objectSize(), options.partSize())
+                    .stream(file, file.available(), -1)
                     .build();
             minioClient.putObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -275,17 +269,16 @@ public class MinioService {
     public void upload(Path source, InputStream file, String contentType, Map<String, String> headers) throws
         com.jlefebure.spring.boot.minio.MinioException {
         try {
-            PutObjectOptions options = new PutObjectOptions(file.available(), -1);
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(configurationProperties.getBucket())
                     .object(source.toString())
-                    .stream(file, options.objectSize(), options.partSize())
+                    .stream(file, file.available(), -1)
                     .headers(headers)
                     .contentType(contentType)
                     .build();
 
             minioClient.putObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -301,16 +294,15 @@ public class MinioService {
     public void upload(Path source, InputStream file, String contentType) throws
         com.jlefebure.spring.boot.minio.MinioException {
         try {
-            PutObjectOptions options = new PutObjectOptions(file.available(), -1);
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(configurationProperties.getBucket())
                     .object(source.toString())
-                    .stream(file, options.objectSize(), options.partSize())
+                    .stream(file, file.available(), -1)
                     .contentType(contentType)
                     .build();
 
             minioClient.putObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -331,7 +323,7 @@ public class MinioService {
                     .filename(file.getAbsolutePath())
                     .build();
             minioClient.uploadObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new com.jlefebure.spring.boot.minio.MinioException("Error while fetching files in Minio", e);
         }
     }
@@ -350,7 +342,7 @@ public class MinioService {
                     .object(source.toString())
                     .build();
             minioClient.removeObject(args);
-        } catch (XmlParserException | InvalidBucketNameException | NoSuchAlgorithmException | InsufficientDataException | IOException | InvalidKeyException | ErrorResponseException | InternalException | InvalidResponseException | ServerException e) {
+        } catch (Exception e) {
             throw new MinioException("Error while fetching files in Minio", e);
         }
     }

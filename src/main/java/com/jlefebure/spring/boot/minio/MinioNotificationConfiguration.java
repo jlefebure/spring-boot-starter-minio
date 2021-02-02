@@ -22,7 +22,6 @@ import io.minio.CloseableIterator;
 import io.minio.ListenBucketNotificationArgs;
 import io.minio.MinioClient;
 import io.minio.Result;
-import io.minio.errors.*;
 import io.minio.messages.NotificationRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +33,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,9 +101,8 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
 
                                     }
                                 };
-                            } catch (InvalidBucketNameException | InternalException | ErrorResponseException | XmlParserException | InvalidKeyException | IOException | InsufficientDataException | NoSuchAlgorithmException | InvalidResponseException | ServerException e) {
-                                LOGGER.error("Error while registering notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
-                                LOGGER.error("Exception is", e);
+                            } catch (Exception e) {
+                                LOGGER.error("Error while registering notification for method " + m.getName() + " with notification " + Arrays.toString(annotation.value()), e);
                                 throw new IllegalStateException("Cannot register handler", e);
                             }
                         }

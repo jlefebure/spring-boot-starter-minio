@@ -46,13 +46,16 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MinioNotificationConfiguration.class);
 
-    @Autowired
-    private MinioClient minioClient;
-
-    @Autowired
-    private MinioConfigurationProperties minioConfigurationProperties;
+    private final MinioClient minioClient;
+    private final MinioConfigurationProperties minioConfigurationProperties;
 
     private List<Thread> handlers = new ArrayList<>();
+
+    @Autowired
+    public MinioNotificationConfiguration(MinioClient minioClient, MinioConfigurationProperties minioConfigurationProperties) {
+        this.minioClient = minioClient;
+        this.minioConfigurationProperties = minioConfigurationProperties;
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

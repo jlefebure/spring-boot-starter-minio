@@ -34,11 +34,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MinioHealthIndicator implements HealthIndicator {
 
-    @Autowired
-    private MinioClient minioClient;
+    private final MinioClient minioClient;
+    private final MinioConfigurationProperties minioConfigurationProperties;
 
     @Autowired
-    private MinioConfigurationProperties minioConfigurationProperties;
+    public MinioHealthIndicator(MinioClient minioClient, MinioConfigurationProperties minioConfigurationProperties) {
+        this.minioClient = minioClient;
+        this.minioConfigurationProperties = minioConfigurationProperties;
+    }
 
 
     @Override

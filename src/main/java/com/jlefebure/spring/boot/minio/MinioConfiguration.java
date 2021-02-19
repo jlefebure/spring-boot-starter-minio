@@ -51,13 +51,12 @@ public class MinioConfiguration {
     public MinioClient minioClient() throws IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException, ServerException {
 
         MinioClient minioClient;
-        if(!configuredProxy()) {
+        if (!configuredProxy()) {
             minioClient = MinioClient.builder()
                     .endpoint(minioConfigurationProperties.getUrl())
                     .credentials(minioConfigurationProperties.getAccessKey(), minioConfigurationProperties.getSecretKey())
                     .build();
-        }
-        else {
+        } else {
             minioClient = MinioClient.builder()
                     .endpoint(minioConfigurationProperties.getUrl())
                     .credentials(minioConfigurationProperties.getAccessKey(), minioConfigurationProperties.getSecretKey())
@@ -65,9 +64,9 @@ public class MinioConfiguration {
                     .build();
         }
         minioClient.setTimeout(
-            minioConfigurationProperties.getConnectTimeout().toMillis(),
-            minioConfigurationProperties.getWriteTimeout().toMillis(),
-            minioConfigurationProperties.getReadTimeout().toMillis()
+                minioConfigurationProperties.getConnectTimeout().toMillis(),
+                minioConfigurationProperties.getWriteTimeout().toMillis(),
+                minioConfigurationProperties.getReadTimeout().toMillis()
         );
 
         if (minioConfigurationProperties.isCheckBucket()) {
@@ -100,18 +99,19 @@ public class MinioConfiguration {
         return minioClient;
     }
 
-    private boolean configuredProxy(){
+    private boolean configuredProxy() {
         String httpHost = System.getProperty("http.proxyHost");
         String httpPort = System.getProperty("http.proxyPort");
-        return httpHost!=null && httpPort!=null;
+        return httpHost != null && httpPort != null;
     }
+
     private OkHttpClient client() {
         String httpHost = System.getProperty("http.proxyHost");
         String httpPort = System.getProperty("http.proxyPort");
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if(httpHost!=null)
-            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpHost,Integer.parseInt(httpPort))));
+        if (httpHost != null)
+            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpHost, Integer.parseInt(httpPort))));
         return builder
                 .build();
     }

@@ -44,11 +44,8 @@ import java.util.concurrent.TimeUnit;
 @AutoConfigureAfter(MinioConfiguration.class)
 public class MinioMetricConfiguration {
 
-    @Autowired
-    private MeterRegistry meterRegistry;
-
-    @Autowired
-    private MinioConfigurationProperties minioConfigurationProperties;
+    private final MeterRegistry meterRegistry;
+    private final MinioConfigurationProperties minioConfigurationProperties;
 
     private Timer listOkTimer;
     private Timer listKoTimer;
@@ -60,6 +57,12 @@ public class MinioMetricConfiguration {
     private Timer removeKoTimer;
     private Timer listBucketOkTimer;
     private Timer listBucketKoTimer;
+
+    @Autowired
+    public MinioMetricConfiguration(MeterRegistry meterRegistry, MinioConfigurationProperties minioConfigurationProperties) {
+        this.meterRegistry = meterRegistry;
+        this.minioConfigurationProperties = minioConfigurationProperties;
+    }
 
     @PostConstruct
     public void initTimers() {

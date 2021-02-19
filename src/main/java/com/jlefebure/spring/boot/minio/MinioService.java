@@ -46,11 +46,14 @@ import java.util.stream.StreamSupport;
 @Service
 public class MinioService {
 
-    @Autowired
-    private MinioClient minioClient;
+    private final MinioClient minioClient;
+    private final MinioConfigurationProperties configurationProperties;
 
     @Autowired
-    private MinioConfigurationProperties configurationProperties;
+    public MinioService(MinioClient minioClient, MinioConfigurationProperties configurationProperties) {
+        this.minioClient = minioClient;
+        this.configurationProperties = configurationProperties;
+    }
 
     /**
      * List all objects at root of the bucket

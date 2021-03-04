@@ -25,7 +25,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
-import org.springframework.boot.actuate.autoconfigure.health.HealthIndicatorAutoConfiguration;
+import org.springframework.boot.actuate.autoconfigure.health.HealthContributorAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -40,15 +40,12 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @ConditionalOnClass({MinioClient.class, ManagementContextAutoConfiguration.class})
 @ConditionalOnEnabledHealthIndicator("minio")
-@AutoConfigureBefore(HealthIndicatorAutoConfiguration.class)
+@AutoConfigureBefore(HealthContributorAutoConfiguration.class)
 @AutoConfigureAfter(MinioConfiguration.class)
 public class MinioMetricConfiguration {
 
-    @Autowired
-    private MeterRegistry meterRegistry;
-
-    @Autowired
-    private MinioConfigurationProperties minioConfigurationProperties;
+    private final MeterRegistry meterRegistry;
+    private final MinioConfigurationProperties minioConfigurationProperties;
 
     private Timer listOkTimer;
     private Timer listKoTimer;
@@ -60,6 +57,12 @@ public class MinioMetricConfiguration {
     private Timer removeKoTimer;
     private Timer listBucketOkTimer;
     private Timer listBucketKoTimer;
+
+    @Autowired
+    public MinioMetricConfiguration(MeterRegistry meterRegistry, MinioConfigurationProperties minioConfigurationProperties) {
+        this.meterRegistry = meterRegistry;
+        this.minioConfigurationProperties = minioConfigurationProperties;
+    }
 
     @PostConstruct
     public void initTimers() {

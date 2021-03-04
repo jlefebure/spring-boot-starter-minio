@@ -16,19 +16,14 @@
 
 package com.jlefebure.spring.boot.minio;
 
+import io.minio.BucketExistsArgs;
 import io.minio.MinioClient;
-import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 
 /**
  * Set the Minio health indicator on Actuator.
@@ -39,11 +34,14 @@ import java.security.NoSuchAlgorithmException;
 @Component
 public class MinioHealthIndicator implements HealthIndicator {
 
-    @Autowired
-    private MinioClient minioClient;
+    private final MinioClient minioClient;
+    private final MinioConfigurationProperties minioConfigurationProperties;
 
     @Autowired
-    private MinioConfigurationProperties minioConfigurationProperties;
+    public MinioHealthIndicator(MinioClient minioClient, MinioConfigurationProperties minioConfigurationProperties) {
+        this.minioClient = minioClient;
+        this.minioConfigurationProperties = minioConfigurationProperties;
+    }
 
 
     @Override
@@ -53,7 +51,10 @@ public class MinioHealthIndicator implements HealthIndicator {
         }
 
         try {
-            if (minioClient.bucketExists(minioConfigurationProperties.getBucket())) {
+            BucketExistsArgs args = BucketExistsArgs.builder()
+                    .bucket(minioConfigurationProperties.getBucket())
+                    .build();
+            if (minioClient.bucketExists(args)) {
                 return Health.up()
                         .withDetail("bucketName", minioConfigurationProperties.getBucket())
                         .build();
@@ -62,7 +63,7 @@ public class MinioHealthIndicator implements HealthIndicator {
                         .withDetail("bucketName", minioConfigurationProperties.getBucket())
                         .build();
             }
-        } catch (InvalidBucketNameException | IOException | NoSuchAlgorithmException | InsufficientDataException | InvalidKeyException  | XmlParserException | ErrorResponseException | InternalException | InvalidResponseException e) {
+        } catch (Exception e) {
             return Health.down(e)
                     .withDetail("bucketName", minioConfigurationProperties.getBucket())
                     .build();

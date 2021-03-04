@@ -21,8 +21,8 @@
 
     <parent>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starters</artifactId>
-        <version>2.2.0.RELEASE</version>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.3</version>
     </parent>
 
     <groupId>com.jlefebure</groupId>
@@ -31,10 +31,10 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <minio.version>7.0.2</minio.version>
+        <minio.version>8.1.0</minio.version>
     </properties>
 
-    <version>1.6-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
 
     <developers>
         <developer>
@@ -72,8 +72,8 @@
         <url>https://github.com/jlefebure/spring-boot-starter-minio.git</url>
         <connection>scm:git:https://github.com/jlefebure/spring-boot-starter-minio.git</connection>
         <developerConnection>scm:git:https://github.com/jlefebure/spring-boot-starter-minio.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>
@@ -90,28 +90,33 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
+            <scope>provided</scope>
             <version>${minio.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

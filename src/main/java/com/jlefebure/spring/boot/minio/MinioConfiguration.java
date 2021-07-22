@@ -44,8 +44,12 @@ public class MinioConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MinioConfiguration.class);
 
+    private final MinioConfigurationProperties minioConfigurationProperties;
+
     @Autowired
-    private MinioConfigurationProperties minioConfigurationProperties;
+    public MinioConfiguration(MinioConfigurationProperties minioConfigurationProperties) {
+        this.minioConfigurationProperties = minioConfigurationProperties;
+    }
 
     @Bean
     public MinioClient minioClient() throws IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException, ServerException {

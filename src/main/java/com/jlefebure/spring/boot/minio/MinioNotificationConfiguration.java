@@ -49,7 +49,7 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
     private final MinioClient minioClient;
     private final MinioConfigurationProperties minioConfigurationProperties;
 
-    private List<Thread> handlers = new ArrayList<>();
+    private final List<Thread> handlers = new ArrayList<>();
 
     @Autowired
     public MinioNotificationConfiguration(MinioClient minioClient, MinioConfigurationProperties minioConfigurationProperties) {

@@ -18,7 +18,9 @@ package com.jlefebure.spring.boot.minio;
 
 
 import io.minio.*;
+import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -345,6 +347,28 @@ public class MinioService {
                     .object(source.toString())
                     .build();
             minioClient.removeObject(args);
+        } catch (Exception e) {
+            throw new MinioException("Error while fetching files in Minio", e);
+        }
+    }
+
+    /**
+     * Removes multiple files from Minio
+     *
+     * @param sources Iterable of Paths with prefix to the object. Object name must be included.
+     * @throws com.jlefebure.spring.boot.minio.MinioException if an error occur while removing objects
+     */
+    public void removeObjects(Iterable<Path> sources) throws com.jlefebure.spring.boot.minio.MinioException {
+        try {
+            Iterable<DeleteObject> objects = Stream.of(sources)
+                    .map(p -> new DeleteObject(p.toString()))
+                    .collect(Collectors.toSet());
+
+            RemoveObjectsArgs args = RemoveObjectsArgs.builder()
+                    .bucket(configurationProperties.getBucket())
+                    .objects(objects)
+                    .build();
+            minioClient.removeObjects(args);
         } catch (Exception e) {
             throw new MinioException("Error while fetching files in Minio", e);
         }

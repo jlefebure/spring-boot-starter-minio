@@ -1,0 +1,9 @@
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioMetricConfiguration.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioException.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/notification/MinioNotification.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioConfigurationProperties.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioFetchException.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioConfiguration.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioNotificationConfiguration.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioHealthIndicator.java
+/Users/rgordeev/projects/rtk/spring-boot-starter-minio/src/main/java/com/jlefebure/spring/boot/minio/MinioService.java

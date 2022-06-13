@@ -1,0 +1,88 @@
+{
+  "groups": [
+    {
+      "name": "spring.minio",
+      "type": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.minio.access-key",
+      "type": "java.lang.String",
+      "description": "Access key (login) on Minio instance",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": "Q3AM3UQ867SPQQA43P2F"
+    },
+    {
+      "name": "spring.minio.bucket",
+      "type": "java.lang.String",
+      "description": "Bucket name for the application. The bucket must already exists on Minio.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties"
+    },
+    {
+      "name": "spring.minio.check-bucket",
+      "type": "java.lang.Boolean",
+      "description": "Check if the bucket exists on Minio instance. Settings this false will disable the check during the application context initialization. This property should be used for debug purpose only, because operations on Minio will not work during runtime.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.minio.connect-timeout",
+      "type": "java.time.Duration",
+      "description": "Define the connect timeout for the Minio Client.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": "10s"
+    },
+    {
+      "name": "spring.minio.create-bucket",
+      "type": "java.lang.Boolean",
+      "description": "Will create the bucket if it do not exists on the Minio instance.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.minio.metric-name",
+      "type": "java.lang.String",
+      "description": "Metric configuration prefix which are registered on Actuator.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": "minio.storage"
+    },
+    {
+      "name": "spring.minio.read-timeout",
+      "type": "java.time.Duration",
+      "description": "Define the read timeout for the Minio Client.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": "10s"
+    },
+    {
+      "name": "spring.minio.secret-key",
+      "type": "java.lang.String",
+      "description": "Secret key (password) on Minio instance",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+    },
+    {
+      "name": "spring.minio.secure",
+      "type": "java.lang.Boolean",
+      "description": "If the scheme is not provided in {@code url} property, define if the connection is done via HTTP or HTTPS.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.minio.url",
+      "type": "java.lang.String",
+      "description": "URL for Minio instance. Can include the HTTP scheme. Must include the port. If the port is not provided, then the port of the HTTP is taken.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": "https:\/\/play.min.io"
+    },
+    {
+      "name": "spring.minio.write-timeout",
+      "type": "java.time.Duration",
+      "description": "Define the write timeout for the Minio Client.",
+      "sourceType": "com.jlefebure.spring.boot.minio.MinioConfigurationProperties",
+      "defaultValue": "60s"
+    }
+  ],
+  "hints": []
+}

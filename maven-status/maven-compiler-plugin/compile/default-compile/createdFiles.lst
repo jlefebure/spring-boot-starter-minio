@@ -1,0 +1,10 @@
+com/jlefebure/spring/boot/minio/MinioService.class
+META-INF/spring-configuration-metadata.json
+com/jlefebure/spring/boot/minio/MinioException.class
+com/jlefebure/spring/boot/minio/MinioHealthIndicator.class
+com/jlefebure/spring/boot/minio/notification/MinioNotification.class
+com/jlefebure/spring/boot/minio/MinioConfigurationProperties.class
+com/jlefebure/spring/boot/minio/MinioConfiguration.class
+com/jlefebure/spring/boot/minio/MinioMetricConfiguration.class
+com/jlefebure/spring/boot/minio/MinioFetchException.class
+com/jlefebure/spring/boot/minio/MinioNotificationConfiguration.class

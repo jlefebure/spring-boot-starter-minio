@@ -34,7 +34,7 @@
         <minio.version>8.4.2</minio.version>
     </properties>
 
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
 
     <developers>
         <developer>

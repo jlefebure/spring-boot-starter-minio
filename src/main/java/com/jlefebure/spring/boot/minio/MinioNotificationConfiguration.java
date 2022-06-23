@@ -29,9 +29,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,8 +59,15 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
         this.minioConfigurationProperties = minioConfigurationProperties;
     }
 
+    private ApplicationContext applicationContext;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void listenNotification() throws BeansException {
         for (String beanName : applicationContext.getBeanDefinitionNames()) {
             Object obj = applicationContext.getBean(beanName);
 

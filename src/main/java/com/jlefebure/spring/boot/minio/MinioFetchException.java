@@ -22,6 +22,9 @@ package com.jlefebure.spring.boot.minio;
  * @author Jordan LEFEBURE
  */
 public class MinioFetchException extends RuntimeException{
+
+    private static final long serialVersionUID = 8134283622757732381L;
+
     public MinioFetchException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -16,14 +16,15 @@
 
 package com.jlefebure.spring.boot.minio;
 
-import io.minio.BucketExistsArgs;
-import io.minio.MinioClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
+
+import io.minio.BucketExistsArgs;
+import io.minio.MinioClient;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Set the Minio health indicator on Actuator.
@@ -32,17 +33,11 @@ import org.springframework.stereotype.Component;
  */
 @ConditionalOnClass(ManagementContextAutoConfiguration.class)
 @Component
+@RequiredArgsConstructor
 public class MinioHealthIndicator implements HealthIndicator {
 
     private final MinioClient minioClient;
     private final MinioConfigurationProperties minioConfigurationProperties;
-
-    @Autowired
-    public MinioHealthIndicator(MinioClient minioClient, MinioConfigurationProperties minioConfigurationProperties) {
-        this.minioClient = minioClient;
-        this.minioConfigurationProperties = minioConfigurationProperties;
-    }
-
 
     @Override
     public Health health() {

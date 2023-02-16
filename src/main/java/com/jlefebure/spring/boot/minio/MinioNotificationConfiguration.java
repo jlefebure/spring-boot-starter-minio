@@ -17,49 +17,46 @@
 package com.jlefebure.spring.boot.minio;
 
 
-import com.jlefebure.spring.boot.minio.notification.MinioNotification;
-import io.minio.CloseableIterator;
-import io.minio.ListenBucketNotificationArgs;
-import io.minio.MinioClient;
-import io.minio.Result;
-import io.minio.messages.NotificationRecords;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Configuration;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Configuration
-@AutoConfigureBefore(MinioMetricConfiguration.class)
-@AutoConfigureAfter(MinioConfiguration.class)
-public class MinioNotificationConfiguration implements ApplicationContextAware {
+import org.springframework.beans.BeansException;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MinioNotificationConfiguration.class);
+import com.jlefebure.spring.boot.minio.notification.MinioNotification;
+
+import io.minio.CloseableIterator;
+import io.minio.ListenBucketNotificationArgs;
+import io.minio.MinioClient;
+import io.minio.Result;
+import io.minio.messages.NotificationRecords;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@AutoConfiguration(after = {MinioConfiguration.class, MinioMetricConfiguration.class})
+@RequiredArgsConstructor
+@Slf4j
+public class MinioNotificationConfiguration implements ApplicationContextAware {
 
     private final MinioClient minioClient;
     private final MinioConfigurationProperties minioConfigurationProperties;
 
     private List<Thread> handlers = new ArrayList<>();
 
-    @Autowired
-    public MinioNotificationConfiguration(MinioClient minioClient, MinioConfigurationProperties minioConfigurationProperties) {
-        this.minioClient = minioClient;
-        this.minioConfigurationProperties = minioConfigurationProperties;
-    }
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         for (String beanName : applicationContext.getBeanDefinitionNames()) {
+
+            // ignore self
+            if("minioNotificationConfiguration".equals(beanName)) {
+                continue;
+            }
+
             Object obj = applicationContext.getBean(beanName);
 
             Class<?> objClz = obj.getClass();
@@ -84,7 +81,7 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
                     Thread handler = new Thread(() -> {
                         for (; ; ) {
                             try {
-                                LOGGER.info("Registering Minio handler on {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
+                                log.info("Registering Minio handler on {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
                                 ListenBucketNotificationArgs args = ListenBucketNotificationArgs.builder()
                                         .bucket(minioConfigurationProperties.getBucket())
                                         .prefix(annotation.prefix())
@@ -95,17 +92,15 @@ public class MinioNotificationConfiguration implements ApplicationContextAware {
                                     while(list.hasNext()){
                                         NotificationRecords info = list.next().get();
                                         try {
-                                            LOGGER.debug("Receive notification for method {}", m.getName());
+                                            log.debug("Receive notification for method {}", m.getName());
                                             m.invoke(obj, info);
                                         } catch (IllegalAccessException | InvocationTargetException e) {
-                                            LOGGER.error("Error while handling notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()));
-                                            LOGGER.error("Exception is", e);
+                                            log.error("Error while handling notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()), e);
                                         }
-
                                     }
                                 };
                             } catch (Exception e) {
-                                LOGGER.error("Error while registering notification for method " + m.getName() + " with notification " + Arrays.toString(annotation.value()), e);
+                                log.error("Error while registering notification for method {} with notification {}", m.getName(), Arrays.toString(annotation.value()), e);
                                 throw new IllegalStateException("Cannot register handler", e);
                             }
                         }

@@ -22,6 +22,9 @@ package com.jlefebure.spring.boot.minio;
  * @author Jordan LEFEBURE
  */
 public class MinioException extends Exception {
+
+    private static final long serialVersionUID = -4395640570164422849L;
+
     public MinioException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -16,39 +16,43 @@
 
 package com.jlefebure.spring.boot.minio;
 
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.errors.*;
-import okhttp3.OkHttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-@Configuration
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.errors.ErrorResponseException;
+import io.minio.errors.InsufficientDataException;
+import io.minio.errors.InternalException;
+import io.minio.errors.InvalidResponseException;
+import io.minio.errors.ServerException;
+import io.minio.errors.XmlParserException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+
+@AutoConfiguration
 @ConditionalOnClass(MinioClient.class)
 @EnableConfigurationProperties(MinioConfigurationProperties.class)
 @ComponentScan("com.jlefebure.spring.boot.minio")
+@RequiredArgsConstructor
+@Slf4j
 public class MinioConfiguration {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MinioConfiguration.class);
-
-    @Autowired
-    private MinioConfigurationProperties minioConfigurationProperties;
+    private final MinioConfigurationProperties minioConfigurationProperties;
 
     @Bean
-    public MinioClient minioClient() throws IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException, ServerException {
+    private MinioClient minioClient() throws IOException, InvalidKeyException, NoSuchAlgorithmException, InsufficientDataException, InternalException, ErrorResponseException, InvalidResponseException, MinioException, XmlParserException, ServerException {
 
         MinioClient minioClient;
         if (!configuredProxy()) {
@@ -71,7 +75,7 @@ public class MinioConfiguration {
 
         if (minioConfigurationProperties.isCheckBucket()) {
             try {
-                LOGGER.debug("Checking if bucket {} exists", minioConfigurationProperties.getBucket());
+                log.debug("Checking if bucket {} exists", minioConfigurationProperties.getBucket());
                 BucketExistsArgs existsArgs = BucketExistsArgs.builder()
                         .bucket(minioConfigurationProperties.getBucket())
                         .build();
@@ -91,14 +95,14 @@ public class MinioConfiguration {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("Error while checking bucket", e);
+                log.error("Error while checking bucket", e);
                 throw e;
             }
         }
 
         return minioClient;
     }
-
+    
     private boolean configuredProxy() {
         String httpHost = System.getProperty("http.proxyHost");
         String httpPort = System.getProperty("http.proxyPort");

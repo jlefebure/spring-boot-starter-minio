@@ -17,31 +17,29 @@
 package com.jlefebure.spring.boot.minio;
 
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
-import io.minio.MinioClient;
+import java.util.concurrent.TimeUnit;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
 import org.springframework.boot.actuate.autoconfigure.health.HealthContributorAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-import java.util.concurrent.TimeUnit;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import io.minio.MinioClient;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
 @Aspect
-@Configuration
+@AutoConfiguration(before = {HealthContributorAutoConfiguration.class}, after = {MinioConfiguration.class})
 @ConditionalOnClass({MinioClient.class, ManagementContextAutoConfiguration.class})
 @ConditionalOnEnabledHealthIndicator("minio")
-@AutoConfigureBefore(HealthContributorAutoConfiguration.class)
-@AutoConfigureAfter(MinioConfiguration.class)
+@RequiredArgsConstructor
 public class MinioMetricConfiguration {
 
     private final MeterRegistry meterRegistry;
@@ -57,12 +55,6 @@ public class MinioMetricConfiguration {
     private Timer removeKoTimer;
     private Timer listBucketOkTimer;
     private Timer listBucketKoTimer;
-
-    @Autowired
-    public MinioMetricConfiguration(MeterRegistry meterRegistry, MinioConfigurationProperties minioConfigurationProperties) {
-        this.meterRegistry = meterRegistry;
-        this.minioConfigurationProperties = minioConfigurationProperties;
-    }
 
     @PostConstruct
     public void initTimers() {

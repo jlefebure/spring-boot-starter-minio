@@ -104,7 +104,7 @@
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
             <scope>provided</scope>
-            <version>${minio.version}</version>
+            <version>8.5.10</version>
         </dependency>
 
         <dependency>
